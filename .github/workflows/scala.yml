@@ -29,6 +29,8 @@ jobs:
         cache: 'sbt'
     - name: Run tests
       run: sbt test
+    - name: Run format checking
+      run: sbt scalafmtCheckAll
       # Optional: This step uploads information to the GitHub dependency graph and unblocking Dependabot alerts for the repository
     - name: Upload dependency graph
       uses: scalacenter/sbt-dependency-submission@v2.1.1
