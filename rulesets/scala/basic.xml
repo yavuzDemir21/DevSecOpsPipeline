@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<ruleset name="Custom Scala Ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>
+        Custom ruleset for identifying specific Scala code patterns.
+    </description>
+
+    <rule name="AvoidVar"
+          language="scala"
+          message="Avoid using 'var' - prefer 'val' for immutability"
+          class="org.pmd.lang.scala.rule.AvoidVar">
+        <description>
+            Using 'var' makes code mutable. Prefer 'val' for immutability.
+        </description>
+        <priority>3</priority>
+    </rule>
+
+    <rule name="UnusedLocalVariable"
+          language="scala"
+          message="Avoid unused local variables"
+          class="org.pmd.lang.scala.rule.UnusedLocalVariable">
+        <description>
+            Unused local variables should be removed to clean up the code.
+        </description>
+        <priority>3</priority>
+    </rule>
+
+    <rule name="AvoidNonScalaCollections"
+          language="scala"
+          message="Prefer Scala collections over Java collections"
+          class="org.pmd.lang.scala.rule.AvoidNonScalaCollections">
+        <description>
+            Use Scala collections instead of Java collections for consistency and better integration.
+        </description>
+        <priority>2</priority>
+    </rule>
+
+    <rule name="AvoidLiteralsInLoop"
+          language="scala"
+          message="Avoid using literals in loop conditions"
+          class="org.pmd.lang.scala.rule.AvoidLiteralsInLoop">
+        <description>
+            Using literals in loop conditions can lead to inefficient code. Consider alternatives or parameterization.
+        </description>
+        <priority>3</priority>
+    </rule>
+
+    <rule name="UnusedImports"
+          language="scala"
+          message="Remove unused import statements"
+          class="org.pmd.lang.scala.rule.UnusedImports">
+        <description>
+            Unused import statements should be removed to keep the code clean.
+        </description>
+        <priority>4</priority>
+    </rule>
+
+    <rule name="EmptyCatchBlock"
+          language="scala"
+          message="Avoid empty catch blocks"
+          class="org.pmd.lang.scala.rule.EmptyCatchBlock">
+        <description>
+            Empty catch blocks should be avoided. At least log an exception.
+        </description>
+        <priority>3</priority>
+    </rule>
+
+    <!-- Add more custom rules as needed -->
+</ruleset>
