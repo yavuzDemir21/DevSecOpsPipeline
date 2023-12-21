@@ -32,8 +32,8 @@ jobs:
         id: pmd
         uses: pmd/pmd-github-action@v1
         with:
-          rulesets: 'rulesets/java/quickstart.xml'
-          sourcePath: 'src/main/java'
+          rulesets: 'rulesets/scala/basic.xml'
+          sourcePath: 'src/main/scala'
           analyzeModifiedFilesOnly: false
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v2
