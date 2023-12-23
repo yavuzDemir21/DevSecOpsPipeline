@@ -1,10 +1,11 @@
 object GoogleApiExample {
   def main(args: Array[String]): Unit = {
     // Hardcoding a Google OAuth access token (for demonstration purposes only)
-    val google_cloud_private_key_id = "35169ee57a417474ce427e2c9a31d931a663dff0" // Replace this with a real access token
+    val password =
+      "35169ee57a417474ce427e2c9a31d931a663dff0" // Replace this with a real access token
 
     // Simulating calling a function that uses the access token to perform a Google API request
-    performGoogleAPIRequest(google_cloud_private_key_id)
+    performGoogleAPIRequest(password)
   }
 
   def performGoogleAPIRequest(accessToken: String): Unit = {
