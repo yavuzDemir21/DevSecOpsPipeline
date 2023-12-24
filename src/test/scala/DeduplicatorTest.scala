@@ -4,9 +4,8 @@ import org.scalatest.matchers.should.Matchers._
 class DeduplicatorTest extends AnyFunSuite {
 
   test("Deduplicate given list") {
-    val deduplicator = new Deduplicator()
 
-    val result   = deduplicator.deduplicate(Array("arg1", "arg2", "arg1", "arg3"))
+    val result   = Deduplicator.deduplicate(Array("arg1", "arg2", "arg1", "arg3"))
     val expected = Array("arg1", "arg2", "arg3")
 
     result should contain theSameElementsAs expected
