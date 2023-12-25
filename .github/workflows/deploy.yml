@@ -6,7 +6,7 @@
 name: Scala CD
 
 on:
-  push:
+  pull_request:
     branches: [ "main" ]
 
 permissions:
@@ -72,4 +72,4 @@ jobs:
 
     - name: Check deployment
       run: |
-        kubectl rollout status deployment/devsecopspipeline-deployment
+        kubectl rollout status deployment/devsecopspipeline-deployment --timeout=180s
