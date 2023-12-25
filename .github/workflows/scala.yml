@@ -7,7 +7,7 @@ name: Scala CI
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ "deployment" ]
 
 permissions:
   contents: write
