@@ -47,6 +47,7 @@ jobs:
           -Dsonar.projectKey=yavuzDemir21_DevSecOpsPipeline
           -Dsonar.organization=yavuzdemir21
           -Dsonar.sources=src/main/scala,src/test/scala
+
     - name: Build an image from Dockerfile
       run: |
         docker build -t docker.io/cmpe58e/devsecopspipeline:${{ github.sha }} .
@@ -82,3 +83,22 @@ jobs:
         docker tag docker.io/cmpe58e/devsecopspipeline:${{ github.sha }} europe-west3-docker.pkg.dev/cmpe58e-407111/devsecopspipeline/docker.io/cmpe58e/devsecopspipeline:${{ github.sha }}
         docker push europe-west3-docker.pkg.dev/cmpe58e-407111/devsecopspipeline/docker.io/cmpe58e/devsecopspipeline:${{ github.sha }}
 
+    - name: Update gcloud components
+      run: |
+        gcloud components update
+
+    - name: Install gke-gcloud-auth-plugin
+      run: |
+        gcloud components install gke-gcloud-auth-plugin
+
+    - name: Get GKE credentials
+      run: |
+        gcloud container clusters get-credentials dev-sec-ops-pipeline --region europe-west3 --project cmpe58e-407111
+        
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl set image deployment/devsecopspipeline-deployment dev-sec-ops-pipeline=europe-west3-docker.pkg.dev/cmpe58e-407111/devsecopspipeline/docker.io/cmpe58e/devsecopspipeline:${{ github.sha }} --record
+
+    - name: Check deployment
+      run: |
+        kubectl rollout status deployment/devsecopspipeline-deployment
