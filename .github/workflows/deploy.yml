@@ -23,10 +23,14 @@ jobs:
       run: |
         docker build -t docker.io/cmpe58e/devsecopspipeline:latest .
 
+    - name: Build an image from Dockerfile
+      run: |
+        docker build -t docker.io/cmpe58e/testing-repo:${{ github.sha }} .
+
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: 'docker.io/cmpe58e/devsecopspipeline:latest'
+        image-ref: 'docker.io/cmpe58e/testing-repo:${{ github.sha }}'
         format: 'sarif'
         output: 'trivy-results.sarif'
 
@@ -47,12 +51,12 @@ jobs:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
     - name: Configure Docker to use the gcloud command-line tool as a credential helper
-      run: gcloud auth configure-docker europe-west3-docker.pkg.dev
+      run: gcloud auth configure-docker europe-west4-docker.pkg.dev
 
     - name: Push Docker Image to Google Cloud Artifact Registry
       run: |
-        docker tag docker.io/cmpe58e/devsecopspipeline:latest europe-west3-docker.pkg.dev/cmpe58e-407111/devsecopspipeline/docker.io/cmpe58e/devsecopspipeline:latest
-        docker push europe-west3-docker.pkg.dev/cmpe58e-407111/devsecopspipeline/docker.io/cmpe58e/devsecopspipeline:latest
+        docker tag docker.io/cmpe58e/testing-repo:${{ github.sha }} europe-west4-docker.pkg.dev/cmpe58e-407111/testing-repo/docker.io/cmpe58e/testing-repo:${{ github.sha }}
+        docker push europe-west4-docker.pkg.dev/cmpe58e-407111/testing-repo/docker.io/cmpe58e/testing-repo:${{ github.sha }}
 
     - name: Update gcloud components
       run: |
@@ -65,10 +69,10 @@ jobs:
     - name: Get GKE credentials
       run: |
         gcloud container clusters get-credentials dev-sec-ops-pipeline --region europe-west3 --project cmpe58e-407111
-        
+
     - name: Deploy to Kubernetes
       run: |
-        kubectl set image deployment/devsecopspipeline-deployment dev-sec-ops-pipeline=europe-west3-docker.pkg.dev/cmpe58e-407111/devsecopspipeline/docker.io/cmpe58e/devsecopspipeline:latest --record
+        kubectl set image deployment/devsecopspipeline-deployment dev-sec-ops-pipeline=europe-west4-docker.pkg.dev/cmpe58e-407111/testing-repo/docker.io/cmpe58e/testing-repo:${{ github.sha }} --record
 
     - name: Check deployment
       run: |
