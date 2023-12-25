@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devsecopspipeline-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dev-sec-ops-pipeline
+  template:
+    metadata:
+      labels:
+        app: dev-sec-ops-pipeline
+    spec:
+      containers:
+        - name: dev-sec-ops-pipeline
+          image: europe-west3-docker.pkg.dev/cmpe58e-407111/devsecopspipeline/docker.io/cmpe58e/devsecopspipeline:9dae2c929d9b0f4e3055aee7adc96dd1233b48f8
+          ports:
+            - containerPort: 80
