@@ -48,12 +48,12 @@ jobs:
 
     - name: Build an image from Dockerfile
       run: |
-        docker build -t docker.io/cmpe58e/devsecopspipeline:${{ github.sha }} .
+        docker build -t docker.io/cmpe58e/devsecopspipeline:latest .
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: 'docker.io/cmpe58e/devsecopspipeline:${{ github.sha }}'
+        image-ref: 'docker.io/cmpe58e/devsecopspipeline:latest'
         format: 'sarif'
         output: 'trivy-results.sarif'
 
