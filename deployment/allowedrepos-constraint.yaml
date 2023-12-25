@@ -1,0 +1,8 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sAllowedRepos
+metadata:
+  name: allowed-repos
+spec:
+  parameters:
+    repos:
+      - "europe-west3-docker.pkg.dev/cmpe58e-407111/devsecopspipeline"
