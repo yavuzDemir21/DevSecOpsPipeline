@@ -1,0 +1,59 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Scala CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        version: 'latest'
+        project_id: ${{ secrets.GCP_PROJECT }}
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Configure Docker to use the gcloud command-line tool as a credential helper
+      run: gcloud auth configure-docker europe-west3-docker.pkg.dev
+
+    - name: Push Docker Image to Google Cloud Artifact Registry
+      run: |
+        docker tag docker.io/cmpe58e/devsecopspipeline:${{ github.sha }} europe-west3-docker.pkg.dev/cmpe58e-407111/devsecopspipeline/docker.io/cmpe58e/devsecopspipeline:${{ github.sha }}
+        docker push europe-west3-docker.pkg.dev/cmpe58e-407111/devsecopspipeline/docker.io/cmpe58e/devsecopspipeline:${{ github.sha }}
+
+    - name: Update gcloud components
+      run: |
+        gcloud components update
+
+    - name: Install gke-gcloud-auth-plugin
+      run: |
+        gcloud components install gke-gcloud-auth-plugin
+
+    - name: Get GKE credentials
+      run: |
+        gcloud container clusters get-credentials dev-sec-ops-pipeline --region europe-west3 --project cmpe58e-407111
+        
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl set image deployment/devsecopspipeline-deployment dev-sec-ops-pipeline=europe-west3-docker.pkg.dev/cmpe58e-407111/devsecopspipeline/docker.io/cmpe58e/devsecopspipeline:${{ github.sha }} --record
+
+    - name: Check deployment
+      run: |
+        kubectl rollout status deployment/devsecopspipeline-deployment
